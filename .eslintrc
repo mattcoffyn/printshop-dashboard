@@ -1,0 +1,9 @@
+{
+  "extends": ["wesbos"],
+  "rules": {
+    "no-unused-vars": 1,
+    "react/prop-types": 0,
+    "react/jsx-pascal-case": 0,
+    "react/jsx-no-useless-fragment": 0
+  }
+}
