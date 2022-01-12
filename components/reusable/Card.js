@@ -6,10 +6,7 @@ const CardStyles = styled.div`
   border-radius: 1rem;
   padding: 1rem;
   margin: 1rem;
+  display: inline-block;
 `;
 
-export const Card = ({ children }) => (
-  <CardStyles>
-    <div>{children}</div>
-  </CardStyles>
-);
+export const Card = ({ children }) => <CardStyles>{children}</CardStyles>;

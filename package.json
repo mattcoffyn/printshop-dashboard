@@ -9,18 +9,26 @@
   },
   "dependencies": {
     "@apollo/client": "^3.5.6",
+    "@apollo/link-error": "^2.0.0-beta.3",
+    "@apollo/react-ssr": "^4.0.0",
     "@carbon/pictograms-react": "^11.20.0",
     "@emotion/react": "^11.7.1",
     "@reactour/tour": "^2.7.0",
+    "@stripe/react-stripe-js": "^1.1.2",
+    "@stripe/stripe-js": "^1.11.0",
+    "apollo-upload-client": "^17.0.0",
     "babel-plugin-styled-components": "^2.0.2",
+    "formik": "^2.2.9",
     "graphql": "^16.2.0",
     "next": "12.0.7",
+    "next-with-apollo": "^5.1.1",
     "open-props": "^1.1.1",
     "react": "17.0.2",
     "react-data-table-component": "^7.4.6",
     "react-dom": "17.0.2",
     "react-icons": "^4.3.1",
-    "styled-components": "^5.3.3"
+    "styled-components": "^5.3.3",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",

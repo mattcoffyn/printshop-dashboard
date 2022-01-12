@@ -5,7 +5,7 @@ import { ToggleSwitch } from './reusable/Toggle';
 import DropdownStyles from './styles/DropdownStyles';
 
 const SettingsDropdownStyles = styled(DropdownStyles)`
-  right: 5rem;
+  right: 0rem;
 `;
 
 const SettingsDropdown = ({ isOpen, setIsOpen, themeToggler, theme }) => {
@@ -35,7 +35,7 @@ const SettingsDropdown = ({ isOpen, setIsOpen, themeToggler, theme }) => {
 
   return (
     <SettingsDropdownStyles isOpen={isOpen} ref={ref}>
-      <span className="settings-dropdown-header">Settings</span>
+      <span className="dropdown-header">Settings</span>
       <ul>
         <li className="dm-toggle">
           <span>Theme</span>

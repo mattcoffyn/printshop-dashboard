@@ -19,7 +19,7 @@ const DropdownStyles = styled.div`
   z-index: 1;
   transition: transform 0.1s ease-in-out, opacity 0.1s ease-in-out,
     visibility 0.1s ease-in-out;
-  .settings-dropdown-header {
+  .dropdown-header {
     padding: 1rem;
     color: ${({ theme }) => theme.textSecondary};
     font-weight: 200;

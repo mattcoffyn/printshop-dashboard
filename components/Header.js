@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { FiSliders, FiUser } from 'react-icons/fi';
 import UserDropdown from './UserDropdown';
 import SettingsDropdown from './SettingsDropdown';
-import { DropdownSettingsButton, DropdownUserButton } from './reusable/Buttons';
-import { useUser } from './User';
+import { DropdownSettingsButton, DropdownUserButton } from './Buttons';
+import { useUser } from '../lib/useUser';
 
 const HeaderStyles = styled.nav`
   position: fixed;

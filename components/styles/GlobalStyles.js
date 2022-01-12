@@ -49,7 +49,7 @@ const GlobalStyles = createGlobalStyle`
     --info--darkest: hsl(var(--info-color), calc(var(--info-lum) - var(--li-darkest)));;
 
     /* Layout and component vars */
-    --maxWidth: 1000px;
+    --maxWidth: 1600px;
     --bs: 0 12px 24px 0 rgba(0,0,0,0.09);
     --headerHeight: 5rem;
     --sideNavWidth: 6rem;
