@@ -1,14 +1,20 @@
 import { ApolloProvider } from '@apollo/client';
+import { ChakraProvider } from '@chakra-ui/react';
 import withData from '../lib/withData';
-import Layout from '../components/Layout';
-import '../components/styles/open-styles.css';
+import AppLayout from '../components/layouts/AppLayout';
+import theme from '../styles/theme';
+
+import '@fontsource/jost';
+import '@fontsource/league-spartan';
 
 function MyApp({ Component, pageProps, apollo }) {
   return (
     <ApolloProvider client={apollo}>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <ChakraProvider theme={theme}>
+        <AppLayout>
+          <Component {...pageProps} />
+        </AppLayout>
+      </ChakraProvider>
     </ApolloProvider>
   );
 }

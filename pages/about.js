@@ -1,18 +1,18 @@
 import Head from 'next/head';
-import Link from 'next/link';
-import Image from 'next/image';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  Button,
-  Tabs,
-  Tab,
-} from 'carbon-components-react';
-// eslint-disable-next-line camelcase
-import { Solve, Earth, SocialWork_01 } from '@carbon/pictograms-react';
-import { Home16 } from '@carbon/icons-react';
-import { InfoSection, InfoCard } from '../components/Info';
-import Illo from '../public/tab-illo.png';
+// import Link from 'next/link';
+// import Image from 'next/image';
+// import {
+//   Breadcrumb,
+//   BreadcrumbItem,
+//   Button,
+//   Tabs,
+//   Tab,
+// } from 'carbon-components-react';
+// // eslint-disable-next-line camelcase
+// import { Solve, Earth, SocialWork_01 } from '@carbon/pictograms-react';
+// import { Home16 } from '@carbon/icons-react';
+// import { InfoSection, InfoCard } from '../components/Info';
+// import Illo from '../public/tab-illo.png';
 
 export default function About() {
   const props = {
@@ -34,7 +34,7 @@ export default function About() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="bx--grid bx--grid--full-width landing-page">
+      {/* <div>
         <div className="bx--row landing-page__banner">
           <div className="bx--col-lg-16">
             <Breadcrumb noTrailingSlash aria-label="Page navigation">
@@ -129,7 +129,7 @@ export default function About() {
             <Earth aria-label="Earth" />
           </InfoCard>
         </InfoSection>
-      </div>
+      </div> */}
     </>
   );
 }

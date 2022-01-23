@@ -1,126 +1,124 @@
-import { useState } from 'react';
-import styled from 'styled-components';
+import { useMutation } from '@apollo/client';
+import {
+  Flex,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  useColorModeValue,
+  IconButton,
+  Switch,
+  useColorMode,
+  MenuGroup,
+  MenuDivider,
+  Button,
+  Text,
+} from '@chakra-ui/react';
 import { FiSliders, FiUser } from 'react-icons/fi';
-import UserDropdown from './UserDropdown';
-import SettingsDropdown from './SettingsDropdown';
-import { DropdownSettingsButton, DropdownUserButton } from './Buttons';
-import { useUser } from '../lib/useUser';
+import { CURRENT_USER_QUERY, SIGNOUT_MUTATION, useUser } from '../lib/useUser';
 
-const HeaderStyles = styled.nav`
-  position: fixed;
-  display: flex;
-  left: var(--sideNaveWidth);
-  height: var(--headerHeight);
-  width: calc(100% - var(--sideNavWidth));
-  border-bottom: 1px solid ${({ theme }) => theme.cardBorder};
-  margin-bottom: 3rem;
-  margin-left: var(--sideNavWidth);
-  justify-content: space-between;
-  background: ${({ theme }) => theme.body};
-  z-index: 100;
-`;
-
-const HeaderLeft = styled.ul`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  height: 100%;
-  padding: 0 1rem;
-  span {
-    color: ${({ theme }) => theme.textSecondary};
-    font-weight: 500;
-    font-size: 1.75rem;
-    strong {
-      color: ${({ theme }) => theme.textTertiary};
-      font-size: 1.25rem;
-    }
-  }
-`;
-
-const HeaderRight = styled.ul`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  height: 100%;
-  z-index: 100;
-  padding-right: 0.5rem;
-  li {
-    display: flex;
-    align-items: center;
-    margin: 0;
-  }
-  .header-icon {
-    height: 2.5rem;
-    width: 2.5rem;
-    stroke-width: 1;
-    margin-right: 1rem;
-    cursor: pointer;
-    &:hover {
-      stroke: ${({ theme }) => theme.textSecondary};
-    }
-  }
-  .dm-toggle {
-    margin-right: 1rem;
-  }
-`;
-
-export const Header = ({ theme, themeToggler }) => {
-  const [settingsDropdown, setSettingsDropdown] = useState(false);
-  const [userDropdown, setUserDropdown] = useState(false);
-
-  const user = useUser();
+export const Header = () => {
+  const { colorMode, toggleColorMode } = useColorMode();
+  const border = useColorModeValue('gray.400', 'gray.600');
+  const version = useColorModeValue('gray.500', 'gray.500');
+  const { user } = useUser();
   const isLoggedIn = !!user;
+  const [signout] = useMutation(SIGNOUT_MUTATION, {
+    refetchQueries: [{ query: CURRENT_USER_QUERY }],
+  });
 
-  function handleSettingsOpen(e) {
-    const { id } = e.currentTarget;
-    if (id === 'settings') {
-      setSettingsDropdown(!settingsDropdown);
-    }
-    if (id === 'user') {
-      setUserDropdown(!userDropdown);
-    }
+  function handleSignout() {
+    signout();
   }
 
   return (
-    <HeaderStyles>
-      <HeaderLeft>
-        <span>
-          Print Shop <strong>v0.2.1</strong>
-        </span>
-      </HeaderLeft>
-      <HeaderRight>
-        <li>
-          <DropdownSettingsButton
-            id="settings"
-            onClick={(e) => handleSettingsOpen(e)}
-          >
-            <FiSliders />
-          </DropdownSettingsButton>
-        </li>
-        <li>
-          <DropdownUserButton
-            // disabled={dropdowns.user}
-            isLoggedIn={isLoggedIn}
-            id="user"
-            onClick={(e) => handleSettingsOpen(e)}
-          >
-            <FiUser />
-            <span>{isLoggedIn ? user.name : `Log In`}</span>
-          </DropdownUserButton>
-        </li>
-      </HeaderRight>
-      <SettingsDropdown
-        isOpen={settingsDropdown}
-        setIsOpen={setSettingsDropdown}
-        themeToggler={themeToggler}
-        theme={theme}
-      />
-      <UserDropdown
-        isOpen={userDropdown}
-        setIsOpen={setUserDropdown}
-        themeToggler={themeToggler}
-        theme={theme}
-      />
-    </HeaderStyles>
+    <Flex
+      className="header"
+      d="fixed"
+      pl={5}
+      pr={1}
+      py={1}
+      align="center"
+      justify="space-between"
+      borderBottomWidth="1px"
+      borderBottomColor={border}
+    >
+      <Flex align="center" mr={5} justify="start">
+        <Text as="span">
+          Print Shop{' '}
+          <Text as="strong" color={version}>
+            v0.2.4
+          </Text>
+        </Text>
+      </Flex>
+      <Flex align="center" mr={5} justify="end" p={0} m={0}>
+        <Menu>
+          <MenuButton
+            as={IconButton}
+            aria-label="App Settings"
+            icon={<FiSliders />}
+            bg="none"
+            _hover={{ bg: 'none', color: 'gray.400' }}
+            _expanded={{ bg: 'none', color: 'gray.400' }}
+          />
+          <MenuList>
+            <MenuGroup title="Settings">
+              <MenuItem
+                closeOnSelect={false}
+                d="flex"
+                justifyContent="space-between"
+              >
+                <span>Dark Mode</span>
+                <Switch
+                  colorScheme="green"
+                  size="lg"
+                  onChange={toggleColorMode}
+                  isChecked={colorMode === 'dark'}
+                />
+              </MenuItem>
+              <MenuItem>Create a Copy</MenuItem>
+              <MenuItem>Mark as Draft</MenuItem>
+              <MenuItem>Delete</MenuItem>
+              <MenuItem>Attend a Workshop</MenuItem>
+            </MenuGroup>
+            <MenuDivider />
+            <MenuGroup title="Help">
+              <MenuItem>Docs</MenuItem>
+              <MenuItem>FAQ</MenuItem>
+            </MenuGroup>
+          </MenuList>
+        </Menu>
+        <Menu closeOnBlur closeOnSelect>
+          <MenuButton
+            as={IconButton}
+            aria-label="Account Options"
+            icon={<FiUser />}
+            bg="none"
+            color={isLoggedIn ? 'green.400' : 'white'}
+            _hover={{ bg: 'none', color: 'gray.400' }}
+            _expanded={{ bg: 'none', color: 'gray.400' }}
+          />
+          <MenuList>
+            <MenuGroup title="Account">
+              <MenuItem>
+                {isLoggedIn ? (
+                  <Button
+                    colorScheme="green"
+                    variant="link"
+                    onClick={() => handleSignout()}
+                  >
+                    Sign out
+                  </Button>
+                ) : (
+                  <Button colorScheme="green" variant="link" onClick={signout}>
+                    I'm logged out
+                  </Button>
+                )}
+              </MenuItem>
+            </MenuGroup>
+          </MenuList>
+        </Menu>
+      </Flex>
+    </Flex>
   );
 };

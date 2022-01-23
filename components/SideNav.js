@@ -1,53 +1,43 @@
-import styled from 'styled-components';
 import { FiCoffee } from 'react-icons/fi';
 import { IoShirtSharp } from 'react-icons/io5';
+import { MdOutlineDashboard } from 'react-icons/md';
+import { Flex, Icon, useColorModeValue } from '@chakra-ui/react';
+import Link from 'next/link';
 
-const SideNavStyles = styled.nav`
-  position: fixed;
-  left: 0;
-  width: var(--sideNavWidth);
-  height: 100vh;
-  border-right: 1px solid ${({ theme }) => theme.cardBorder};
-  background: ${({ theme }) => theme.body};
-  ul {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3rem;
-    padding-top: 1.2rem;
-    li {
-      svg {
-        height: 2.5rem;
-        width: 2.5rem;
-        stroke-width: 1;
-      }
-    }
-  }
-`;
+export const SideNav = () => {
+  const border = useColorModeValue('gray.400', 'gray.600');
 
-const Logo = styled(IoShirtSharp)`
-  fill: var(--success--base);
-  height: 3rem !important;
-  width: 3rem !important;
-`;
+  return (
+    <Flex
+      as="nav"
+      direction="column"
+      align="center"
+      justify="start"
+      gap={8}
+      pt={3}
+      h="100vh"
+      w="3rem"
+      borderRightWidth="1px"
+      borderRightColor={border}
+    >
+      <Link href="/">
+        <Icon
+          as={IoShirtSharp}
+          h={7}
+          w={7}
+          color="green.400"
+          variant="ghost"
+          cursor="pointer"
+        />
+      </Link>
 
-export const SideNav = () => (
-  <SideNavStyles>
-    <ul>
-      <li>
-        <Logo />
-      </li>
-      <li>
-        <FiCoffee />
-      </li>
-      <li>
-        <FiCoffee />
-      </li>
-      <li>
-        <FiCoffee />
-      </li>
-    </ul>
-  </SideNavStyles>
-);
+      <Link href="/about">
+        <Icon as={MdOutlineDashboard} w={6} h={6} cursor="pointer" />
+      </Link>
+
+      <FiCoffee />
+
+      <FiCoffee />
+    </Flex>
+  );
+};

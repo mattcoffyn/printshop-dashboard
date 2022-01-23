@@ -1,3 +1,4 @@
+import { useColorMode, Switch } from '@chakra-ui/react';
 import { useRef, useEffect } from 'react';
 import { FiMoon } from 'react-icons/fi';
 import styled from 'styled-components';
@@ -8,7 +9,8 @@ const SettingsDropdownStyles = styled(DropdownStyles)`
   right: 0rem;
 `;
 
-const SettingsDropdown = ({ isOpen, setIsOpen, themeToggler, theme }) => {
+const SettingsDropdown = ({ isOpen, setIsOpen }) => {
+  const { toggleColorMode } = useColorMode();
   const ref = useRef();
 
   useEffect(() => {
@@ -38,10 +40,9 @@ const SettingsDropdown = ({ isOpen, setIsOpen, themeToggler, theme }) => {
       <span className="dropdown-header">Settings</span>
       <ul>
         <li className="dm-toggle">
-          <span>Theme</span>
-          <ToggleSwitch toggleSomething={themeToggler} state={theme}>
-            <FiMoon />
-          </ToggleSwitch>
+          <span>Dark Mode</span>
+          <FiMoon />
+          <Switch colorScheme="green" size="lg" onChange={toggleColorMode} />
         </li>
       </ul>
     </SettingsDropdownStyles>
