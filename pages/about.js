@@ -15,16 +15,16 @@ import Head from 'next/head';
 // import Illo from '../public/tab-illo.png';
 
 export default function About() {
-  const props = {
-    tabs: {
-      selected: 0,
-      role: 'navigation',
-    },
-    tab: {
-      role: 'presentation',
-      tabIndex: 0,
-    },
-  };
+  //   const props = {
+  //     tabs: {
+  //       selected: 0,
+  //       role: 'navigation',
+  //     },
+  //     tab: {
+  //       role: 'presentation',
+  //       tabIndex: 0,
+  //     },
+  //   };
 
   return (
     <>

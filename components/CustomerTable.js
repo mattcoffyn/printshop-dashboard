@@ -22,7 +22,7 @@ import {
   MenuList,
   MenuItem,
   Text,
-  useColorModeValue,
+  Box,
 } from '@chakra-ui/react';
 import {
   TriangleDownIcon,
@@ -31,7 +31,8 @@ import {
 } from '@chakra-ui/icons';
 import { useTable, useSortBy, usePagination } from 'react-table';
 import Link from 'next/link';
-import { formatWO } from '../lib/formatNumbers';
+import { formatMoneyfromPence, formatSO, formatWO } from '../lib/formatNumbers';
+import { dateToLocaleString } from '../lib/formatDates';
 
 const createCell = ({ row }) => (
   <Menu placement="bottom-end">
@@ -45,26 +46,27 @@ const createCell = ({ row }) => (
       Actions
     </MenuButton>
     <MenuList>
-      <Link href="/" passHref>
-        <MenuItem>View Order</MenuItem>
-      </Link>
-      <Link href={`/customers/${row.original.customerId}`} passHref>
-        <MenuItem>View Customer</MenuItem>
-      </Link>
-      <Link href="/" passHref>
-        <MenuItem>Mark as Complete</MenuItem>
-      </Link>
-      <Link href="/" passHref>
-        <MenuItem>
+      <MenuItem>
+        <Link href="/">View Order</Link>
+      </MenuItem>
+      <MenuItem>
+        <Link href={`/customers/${row.original.customerId}`}>
+          View Customer
+        </Link>
+      </MenuItem>
+      <MenuItem>
+        <Link href="/">Mark as Complete</Link>
+      </MenuItem>
+      <MenuItem>
+        <Link href="/" passHref>
           <Text color="red.500">Delete Order</Text>
-        </MenuItem>
-      </Link>
+        </Link>
+      </MenuItem>
     </MenuList>
   </Menu>
 );
 
-function DataTable({ data }) {
-  const border = useColorModeValue('gray.300', 'gray.700');
+function CustomerTable({ data, cardBorder }) {
   const optionsCell = {
     // Header: () => null,
     Header: () => null,
@@ -84,47 +86,57 @@ function DataTable({ data }) {
 
   const columns = useMemo(
     () => [
+      // {
+      //   Header: 'Orders',
+      // columns: [
       {
-        Header: 'Recent Orders',
-        columns: [
-          {
-            Header: 'Order No.',
-            accessor: (row) => formatWO(row.id),
-            id: 'id',
-          },
-          {
-            Header: 'Customer',
-            accessor: 'name',
-            id: 'customerId',
-          },
-          {
-            Header: 'Film Type',
-            accessor: 'filmType',
-          },
-          {
-            Header: 'Film Colour',
-            accessor: 'filmColour',
-          },
-          {
-            Header: 'Develop',
-            accessor: 'dev',
-          },
-          {
-            Header: 'Scan',
-            accessor: 'scan',
-          },
-          {
-            Header: 'Status',
-            accessor: 'status',
-          },
-          optionsCell,
-          // {
-          //   Header: 'Profile Progress',
-          //   Footer: 'Profile Progress',
-          //   accessor: 'progress',
-          // },
-        ],
+        Header: 'Process Job',
+        accessor: (row) => formatWO(row.processId),
+        id: 'processId',
       },
+      {
+        Header: 'Order',
+        accessor: (row) => formatSO(row.orderId),
+        id: 'orderId',
+      },
+      {
+        Header: 'Develop',
+        accessor: 'dev',
+      },
+      {
+        Header: 'Scan',
+        accessor: 'scan',
+      },
+      {
+        Header: 'Film Type',
+        accessor: 'filmType',
+      },
+      {
+        Header: 'Film Colour',
+        accessor: 'filmColour',
+      },
+      {
+        Header: 'Cost',
+        accessor: (row) => formatMoneyfromPence(row.cost),
+        id: 'cost',
+      },
+      {
+        Header: 'Created on',
+        accessor: (row) => dateToLocaleString(row.createdOn),
+        id: 'createdOn',
+      },
+      {
+        Header: 'Status',
+        accessor: 'status',
+      },
+      optionsCell,
+      // {
+      //   Header: 'Profile Progress',
+      //   Footer: 'Profile Progress',
+      //   accessor: 'progress',
+      // },
+      // ],
+      // },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -151,7 +163,7 @@ function DataTable({ data }) {
     {
       columns,
       data,
-      initialState: { pageIndex: 0, sortBy: [{ id: 1, desc: true }] },
+      initialState: { pageIndex: 0, sortBy: [{ orderId: 1, desc: true }] },
     },
     useSortBy,
     // useExpanded,
@@ -159,15 +171,15 @@ function DataTable({ data }) {
   );
 
   return (
-    <>
+    <Box>
       <Table {...getTableProps()}>
         <Thead>
-          {headerGroups.map((headerGroup) => (
-            <Tr key={headerGroup.key} {...headerGroup.getHeaderGroupProps()}>
+          {headerGroups.map((headerGroup, i) => (
+            <Tr {...headerGroup.getHeaderGroupProps()} key={i}>
               {headerGroup.headers.map((column) => (
                 <Th
                   key={column.key}
-                  borderColor={border}
+                  borderColor={cardBorder}
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   isNumeric={column.isNumeric}
                 >
@@ -190,13 +202,14 @@ function DataTable({ data }) {
           {page.map((row) => {
             prepareRow(row);
             const rowProps = row.getRowProps();
+
             return (
               <Fragment key={rowProps.key}>
-                <Tr borderColor={border} {...rowProps}>
+                <Tr {...rowProps}>
                   {row.cells.map((cell) => (
                     <Td
                       key={cell.key}
-                      borderColor={border}
+                      borderColor={cardBorder}
                       {...cell.getCellProps()}
                       isNumeric={cell.column.isNumeric}
                     >
@@ -295,14 +308,14 @@ function DataTable({ data }) {
               const p = e.target.value ? Number(e.target.value) - 1 : 0;
               gotoPage(p);
             }}
+            borderColor={cardBorder}
             style={{ width: '100px' }}
-            borderColor={border}
           />
           <Select
             maxW={150}
             d="inline-block"
             value={pageSize}
-            borderColor={border}
+            borderColor={cardBorder}
             onChange={(e) => {
               setPageSize(Number(e.target.value));
             }}
@@ -315,8 +328,8 @@ function DataTable({ data }) {
           </Select>
         </Flex>
       </Flex>
-    </>
+    </Box>
   );
 }
 
-export default DataTable;
+export default CustomerTable;

@@ -6,20 +6,20 @@ import {
   MenuList,
   MenuItem,
   useColorModeValue,
-  IconButton,
   Switch,
   useColorMode,
   MenuGroup,
   MenuDivider,
   Button,
   Text,
+  Icon,
 } from '@chakra-ui/react';
 import { FiSliders, FiUser } from 'react-icons/fi';
 import { CURRENT_USER_QUERY, SIGNOUT_MUTATION, useUser } from '../lib/useUser';
 
 export const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const border = useColorModeValue('gray.400', 'gray.600');
+  const border = useColorModeValue('gray.400', 'gray.700');
   const version = useColorModeValue('gray.500', 'gray.500');
   const { user } = useUser();
   const isLoggedIn = !!user;
@@ -34,14 +34,15 @@ export const Header = () => {
   return (
     <Flex
       className="header"
-      d="fixed"
       pl={5}
       pr={1}
       py={1}
+      bg="inherit"
       align="center"
       justify="space-between"
       borderBottomWidth="1px"
       borderBottomColor={border}
+      width="100%"
     >
       <Flex align="center" mr={5} justify="start">
         <Text as="span">
@@ -54,13 +55,14 @@ export const Header = () => {
       <Flex align="center" mr={5} justify="end" p={0} m={0}>
         <Menu>
           <MenuButton
-            as={IconButton}
+            as={Button}
             aria-label="App Settings"
-            icon={<FiSliders />}
             bg="none"
             _hover={{ bg: 'none', color: 'gray.400' }}
             _expanded={{ bg: 'none', color: 'gray.400' }}
-          />
+          >
+            <Icon as={FiSliders} w={5} h={5} marginBottom="-3px" />
+          </MenuButton>
           <MenuList>
             <MenuGroup title="Settings">
               <MenuItem
@@ -90,31 +92,27 @@ export const Header = () => {
         </Menu>
         <Menu closeOnBlur closeOnSelect>
           <MenuButton
-            as={IconButton}
+            as={Button}
             aria-label="Account Options"
-            icon={<FiUser />}
             bg="none"
             color={isLoggedIn ? 'green.400' : 'white'}
             _hover={{ bg: 'none', color: 'gray.400' }}
             _expanded={{ bg: 'none', color: 'gray.400' }}
-          />
+          >
+            <Icon as={FiUser} w={5} h={5} marginBottom="-3px" />
+            {/* {isLoggedIn && (
+              <span style={{ marginLeft: '0.5rem' }}>{user.name}</span>
+            )} */}
+          </MenuButton>
           <MenuList>
-            <MenuGroup title="Account">
-              <MenuItem>
-                {isLoggedIn ? (
-                  <Button
-                    colorScheme="green"
-                    variant="link"
-                    onClick={() => handleSignout()}
-                  >
-                    Sign out
-                  </Button>
-                ) : (
-                  <Button colorScheme="green" variant="link" onClick={signout}>
-                    I'm logged out
-                  </Button>
-                )}
-              </MenuItem>
+            <MenuGroup title={`Account - ${user.name}`}>
+              {isLoggedIn ? (
+                <MenuItem color="green.500" onClick={() => handleSignout()}>
+                  Sign out
+                </MenuItem>
+              ) : (
+                <MenuItem onClick={signout}>I&apos;m logged out</MenuItem>
+              )}
             </MenuGroup>
           </MenuList>
         </Menu>

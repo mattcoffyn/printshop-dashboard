@@ -1,122 +1,76 @@
-import { Box, Flex, Text, useColorModeValue } from '@chakra-ui/react';
-import React, { useCallback, useMemo } from 'react';
-import { ChevronRightIcon, ChevronDownIcon } from '@chakra-ui/icons';
-import DataTable from '../components/Table';
-import makeData from '../lib/makeTableData';
+import {
+  Box,
+  CircularProgress,
+  Flex,
+  GridItem,
+  Text,
+  useColorModeValue,
+} from '@chakra-ui/react';
+
+import { useQuery } from '@apollo/client';
 import StatsCards from '../components/StatsCards';
 import { useUser } from '../lib/useUser';
-
-const expandedCell = {
-  // Make an expander cell
-  Header: () => null, // No header
-  id: 'expander', // It needs an ID
-  Cell: ({ row }) => (
-    // Use Cell to render an expander for each row.
-    // We can use the getToggleRowExpandedProps prop-getter
-    // to build the expander.
-    <span {...row.getToggleRowExpandedProps()}>
-      {row.isExpanded ? <ChevronDownIcon /> : <ChevronRightIcon />}
-    </span>
-  ),
-};
+import { GET_ALL_PROCESS_PRODUCTS } from '../components/queries/getAllProcessProducts';
+import DataTable from '../components/Table';
+import { cleanAndCapitalise } from '../lib/formatStrings';
 
 const Home = () => {
   const { user } = useUser();
   const border = useColorModeValue('gray.300', 'gray.700');
-  const columns = useMemo(
-    () => [
-      {
-        Header: 'Recent Orders',
-        columns: [
-          expandedCell,
-          {
-            Header: 'First Name',
-            Footer: 'First Name',
-            accessor: 'firstName',
-          },
-          {
-            Header: 'Last Name',
-            Footer: 'Last Name',
-            accessor: 'lastName',
-          },
-          {
-            Header: 'Age',
-            Footer: 'Age',
-            accessor: 'age',
-          },
-          {
-            Header: 'Visits',
-            Footer: 'Visits',
-            accessor: 'visits',
-          },
-          {
-            Header: 'Status',
-            Footer: 'Status',
-            accessor: 'status',
-          },
-          {
-            Header: 'Profile Progress',
-            Footer: 'Profile Progress',
-            accessor: 'progress',
-          },
-        ],
-      },
-    ],
-    []
-  );
+  const cardBorder = useColorModeValue('gray.200', 'gray.800');
+  const background = useColorModeValue('gray.100', 'gray.800');
+  // const data = useMemo(() => makeData(100), []);
+  const { data, loading, error } = useQuery(GET_ALL_PROCESS_PRODUCTS);
 
-  const data = useMemo(() => makeData(100), []);
-
-  // Create a function that will render our row sub components
-  const renderRowSubComponent = useCallback(
-    ({ row }) => (
-      <pre
-        style={{
-          fontSize: '10px',
-        }}
-      >
-        <code>{JSON.stringify({ values: row.values }, null, 2)}</code>
-      </pre>
-    ),
-    []
-  );
+  if (loading) return <CircularProgress isIndeterminate color="green.300" />;
+  if (error) return <p>{error.message}</p>;
 
   return (
     <>
-      <Flex
-        pb={3}
-        gridColumn="1/13"
-        gridRow="1/2"
-        maxW="100%"
-        align="center"
-        borderBottomWidth={1}
-        borderBottomColor={border}
-        mb={2}
-      >
-        <Text as="h1" fontSize="4xl" p={0} ml={8}>
-          {`Welcome ${user.name}`}
-        </Text>
-      </Flex>
-
+      <GridItem gridColumn="1/17">
+        <Flex align="center" mb="3.5rem" height="6rem">
+          <Text as="h1" fontSize="4xl" p={0} ml={8}>
+            {`Welcome ${user?.name}`}
+          </Text>
+        </Flex>
+        <Box
+          p={2}
+          ml={2}
+          borderWidth={1}
+          borderColor={cardBorder}
+          borderRadius="lg"
+          background={background}
+        >
+          <DataTable
+            data={data.processProducts.map((order) => ({
+              name: order.user.name,
+              customerId: order.user.id,
+              id: order.id,
+              filmType: order.filmType.name,
+              filmColour: order.filmColour.name,
+              dev: order.noDevelop ? 'No' : 'Yes',
+              scan: order.noScans ? 'No' : 'Yes',
+              scanResolution: order.scanResolution?.name,
+              status: cleanAndCapitalise(order.status),
+              notes: order.notes,
+            }))}
+          />
+        </Box>
+      </GridItem>
       <Box
-        gridColumn="1/10"
-        p={0}
+        gridColumn="17/19"
+        p={3}
+        mt={2}
         borderWidth={1}
         borderColor={border}
-        borderRadius={5}
+        borderRadius="lg"
+        // bg={background}
       >
-        <DataTable
-          columns={columns}
+        <StatsCards
           data={data}
-          // We added this as a prop for our table component
-          // Remember, this is not part of the React Table API,
-          // it's merely a rendering option we created for
-          // ourselves
-          renderRowSubComponent={renderRowSubComponent}
+          background={background}
+          cardBorder={cardBorder}
         />
-      </Box>
-      <Box gridColumn="10/13" p={0}>
-        <StatsCards />
       </Box>
     </>
   );

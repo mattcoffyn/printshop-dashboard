@@ -1,19 +1,25 @@
 import { useEffect } from 'react';
-import { Grid, GridItem, useToast } from '@chakra-ui/react';
+import {
+  Flex,
+  Grid,
+  GridItem,
+  useColorModeValue,
+  useToast,
+} from '@chakra-ui/react';
 import { Header } from '../Header';
 import { SideNav } from '../SideNav';
 import { useUser } from '../../lib/useUser';
 import SignInPageComponent from '../SignInPageComponent';
 
 export default function AppLayout({ children }) {
-  // const [theme, themeToggler] = useDarkMode();
-  // const themeMode = theme === 'light' ? lightTheme : darkTheme;
+  const background = useColorModeValue('#F7FAFC', '#171923');
   const { user, previousData } = useUser();
-  const isLoggedIn = !!user;
+  const isLoggedIn = !!user && user.role.name === 'Admin';
   const toast = useToast();
 
   useEffect(() => {
-    if (!user && !!previousData) {
+    if (!isLoggedIn && !!previousData) {
+      console.log(previousData);
       toast({
         title: 'Logged Out',
         description: `See you soon 👋`,
@@ -23,7 +29,7 @@ export default function AppLayout({ children }) {
         position: 'top',
       });
     }
-    if (!!user && !!previousData) {
+    if (!!isLoggedIn && !!previousData) {
       toast({
         title: 'Logged In',
         description: `Welcome ${user.name} 🥳`,
@@ -33,32 +39,52 @@ export default function AppLayout({ children }) {
         position: 'top',
       });
     }
-  }, [user, previousData, toast]);
+  }, [user?.name, previousData, toast, isLoggedIn]);
 
   return (
-    <Grid
-      h="100vh"
-      mw="100vw"
-      templateColumns="3rem auto"
-      templateRows="3rem auto"
-      rowGap={1}
-    >
-      <GridItem colSpan={1}>
-        <SideNav />
-      </GridItem>
-      <GridItem>
-        <Header />
-      </GridItem>
-      <Grid
-        column="2/3"
-        templateColumns="repeat(12, 1fr)"
-        templateRows="6rem auto"
-        gap={2}
-        px={2}
-        overflowY="auto"
-      >
-        {isLoggedIn ? children : <SignInPageComponent />}
-      </Grid>
-    </Grid>
+    <>
+      {isLoggedIn ? (
+        <Grid h="100vh" mw="100vw" templateColumns="3rem auto">
+          <GridItem column="1/2">
+            <SideNav />
+          </GridItem>
+          <GridItem
+            as={Flex}
+            flexDirection="column"
+            column="2/3"
+            overflow="hidden"
+          >
+            <Header />
+            <Grid
+              column="2/3"
+              templateColumns="repeat(18, 1fr)"
+              alignItems="start"
+              gap={2}
+              overflowY="scroll"
+              sx={{
+                scrollbarWidth: 'thin',
+                scrollbarColor: `#2D3748 ${background}`,
+                '&::-webkit-scrollbar': {
+                  width: '8px',
+                },
+                '&::-webkit-scrollbar-track': {
+                  background: `${background}`,
+                  width: '8px',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  backgroundColor: '#2D3748',
+                  borderRadius: '24px',
+                  border: `1px solid ${background}`,
+                },
+              }}
+            >
+              {children}
+            </Grid>
+          </GridItem>
+        </Grid>
+      ) : (
+        <SignInPageComponent />
+      )}
+    </>
   );
 }

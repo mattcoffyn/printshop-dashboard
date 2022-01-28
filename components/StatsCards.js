@@ -1,16 +1,10 @@
 import { useQuery } from '@apollo/client';
-import {
-  Center,
-  Flex,
-  SimpleGrid,
-  Text,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Flex, SimpleGrid, Text } from '@chakra-ui/react';
 import { GET_ALL_PROCESS_PRODUCTS } from './queries/getAllProcessProducts';
 
-const StatsCards = () => {
+const StatsCards = ({ background, cardBorder }) => {
   const { data, loading, error } = useQuery(GET_ALL_PROCESS_PRODUCTS);
-  const border = useColorModeValue('gray.300', 'gray.700');
+  // const border = useColorModeValue('gray.300', 'gray.700');
 
   if (loading) return <p>Loading..</p>;
   if (error) return <p>{error.message}</p>;
@@ -45,58 +39,67 @@ const StatsCards = () => {
   }
 
   return (
-    <SimpleGrid columns={2} spacing="1rem" px={2}>
+    <SimpleGrid columns={1} spacing="1rem" px={0}>
       <Flex
         align="center"
         direction="column"
-        borderColor={border}
+        justifyContent="center"
+        borderColor={cardBorder}
         borderWidth="1px"
-        borderRadius="md"
+        borderRadius="lg"
+        p={2}
+        bg={background}
         style={{ aspectRatio: '1/1' }}
       >
-        <h3>Pending</h3>
-        <Center h="100%">
-          <Text fontSize="2xl">{getStatusCount('pending')}</Text>
-        </Center>
+        <h3>Awaiting Film</h3>
+        <Text fontSize="2xl" margin="auto" pb={3}>
+          {getStatusCount('pending')}
+        </Text>
       </Flex>
       <Flex
         align="center"
         direction="column"
-        borderColor={border}
+        borderColor={cardBorder}
         borderWidth="1px"
-        borderRadius="md"
+        borderRadius="lg"
+        p={2}
+        bg={background}
         style={{ aspectRatio: '1/1' }}
       >
         <h3>Developing</h3>
-        <Center h="100%">
-          <Text fontSize="2xl">{getStatusCount('developing')}</Text>
-        </Center>
+        <Text fontSize="2xl" margin="auto" pb={3}>
+          {getStatusCount('developing')}
+        </Text>
       </Flex>
       <Flex
         align="center"
         direction="column"
-        borderColor={border}
+        borderColor={cardBorder}
         borderWidth="1px"
         borderRadius="md"
+        p={2}
+        bg={background}
         style={{ aspectRatio: '1/1' }}
       >
         <h3>Scanning</h3>
-        <Center h="100%">
-          <Text fontSize="2xl">{getStatusCount('scanning')}</Text>
-        </Center>
+        <Text fontSize="2xl" margin="auto" pb={3}>
+          {getStatusCount('scanning')}
+        </Text>
       </Flex>
       <Flex
         align="center"
         direction="column"
-        borderColor={border}
+        borderColor={cardBorder}
         borderWidth="1px"
         borderRadius="md"
+        p={2}
+        bg={background}
         style={{ aspectRatio: '1/1' }}
       >
-        <h3>Shipping</h3>
-        <Center h="100%">
-          <Text fontSize="2xl">{getStatusCount('complete')}</Text>
-        </Center>
+        <h3>Ready to Ship</h3>
+        <Text fontSize="2xl" margin="auto" pb={3}>
+          {getStatusCount('complete')}
+        </Text>
       </Flex>
     </SimpleGrid>
   );
