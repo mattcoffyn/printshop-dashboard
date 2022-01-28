@@ -105,13 +105,13 @@ export const Header = () => {
             )} */}
           </MenuButton>
           <MenuList>
-            <MenuGroup title={`Account - ${user.name}`}>
+            <MenuGroup title={isLoggedIn ? user?.name : 'Login'}>
               {isLoggedIn ? (
                 <MenuItem color="green.500" onClick={() => handleSignout()}>
                   Sign out
                 </MenuItem>
               ) : (
-                <MenuItem onClick={signout}>I&apos;m logged out</MenuItem>
+                <MenuItem>Please login.</MenuItem>
               )}
             </MenuGroup>
           </MenuList>
