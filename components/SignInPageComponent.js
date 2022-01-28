@@ -34,32 +34,8 @@ const SIGNIN_MUTATION = gql`
   }
 `;
 
-const LoginError = ({ error, children, user }) => {
-  if (!error || !error?.message) {
-    if (user === null || user?.role.name === 'Admin') return null;
-    if (user !== null && user?.role.name !== 'Admin') {
-      return (
-        <Alert
-          status="error"
-          variant="left-accent"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          textAlign="center"
-          height="200px"
-        >
-          <AlertIcon boxSize="40px" mr={0} />
-          <AlertTitle mt={4} mb={1} fontSize="lg">
-            Login Error
-          </AlertTitle>
-          <AlertDescription maxWidth="sm" data-test="graphql-error">
-            <p>Authentication Failed</p>
-            {children}
-          </AlertDescription>
-        </Alert>
-      );
-    }
-  }
+const LoginError = ({ error, children }) => {
+  if (!error || !error?.message) return null;
 
   if (
     error.networkError &&
@@ -84,7 +60,6 @@ const LoginError = ({ error, children, user }) => {
         <AlertDescription maxWidth="sm" data-test="graphql-error">
           <strong>Shoot!</strong>
           {error.message.replace('GraphQL error: ', '')}
-          {children}
         </AlertDescription>
       </Alert>
     ));
@@ -93,7 +68,7 @@ const LoginError = ({ error, children, user }) => {
   return (
     <Alert
       status="error"
-      variant="left-accent"
+      variant="subtle"
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
