@@ -11,13 +11,13 @@ import '../styles/openprops.css';
 
 function MyApp({ Component, pageProps, apollo }) {
   return (
-    <ApolloProvider client={apollo}>
-      <ChakraProvider theme={theme}>
+    <ChakraProvider theme={theme}>
+      <ApolloProvider client={apollo}>
         <AppLayout>
           <Component {...pageProps} />
         </AppLayout>
-      </ChakraProvider>
-    </ApolloProvider>
+      </ApolloProvider>
+    </ChakraProvider>
   );
 }
 
