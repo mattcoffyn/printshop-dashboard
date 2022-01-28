@@ -15,7 +15,7 @@ import DataTable from '../components/Table';
 import { cleanAndCapitalise } from '../lib/formatStrings';
 
 const Home = () => {
-  const { user } = useUser();
+  const user = useUser();
   const border = useColorModeValue('gray.300', 'gray.700');
   const cardBorder = useColorModeValue('gray.200', 'gray.800');
   const background = useColorModeValue('gray.100', 'gray.800');

@@ -21,7 +21,7 @@ export const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const border = useColorModeValue('gray.400', 'gray.700');
   const version = useColorModeValue('gray.500', 'gray.500');
-  const { user } = useUser();
+  const user = useUser();
   const isLoggedIn = !!user;
   const [signout] = useMutation(SIGNOUT_MUTATION, {
     refetchQueries: [{ query: CURRENT_USER_QUERY }],

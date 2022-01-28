@@ -14,7 +14,7 @@ import SignInPageComponent from '../SignInPageComponent';
 export default function AppLayout({ children }) {
   const background = useColorModeValue('#F7FAFC', '#171923');
   // const { user, previousData } = useUser();
-  const { user } = useUser();
+  const user = useUser();
   const isLoggedIn = !!user && user.role.name === 'Admin';
   // const toast = useToast();
 

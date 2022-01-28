@@ -89,7 +89,7 @@ const LoginError = ({ error, children }) => {
 
 const SignInPageComponent = () => {
   const border = useColorModeValue('gray.300', 'gray.700');
-  const { user } = useUser();
+  const user = useUser();
   const { inputs, handleChange } = useForm({
     email: '',
     password: '',
