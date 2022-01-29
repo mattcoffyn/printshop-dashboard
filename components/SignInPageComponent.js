@@ -14,7 +14,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import useForm from '../lib/useForm';
-import { CURRENT_USER_QUERY, useUser } from '../lib/useUser';
+import { CURRENT_USER_QUERY, useUser } from './User';
 
 const SIGNIN_MUTATION = gql`
   mutation SIGNIN_MUTATION($email: String!, $password: String!) {
@@ -103,7 +103,7 @@ const SignInPageComponent = () => {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    await signin();
+    const res = await signin();
 
     // Send the email and password to the graphqlAPI
   }

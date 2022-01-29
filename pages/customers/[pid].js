@@ -1,22 +1,37 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
 import {
+  Button,
   GridItem,
   Tab,
+  Table,
+  TableCaption,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
+  Tbody,
+  Td,
+  Tfoot,
+  Th,
+  Thead,
+  Tr,
   useColorModeValue,
   useToast,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+
 import {
   CustomerSaveAlert,
   CustomerUndoAlert,
 } from '../../components/CustomerEditAlerts';
 import CustomerHead from '../../components/CustomerHead';
-import CustomerTable from '../../components/CustomerTable';
+import CustomerTable from '../../components/CustomerLogsTable';
+import { useUser } from '../../components/User';
+import {
+  dateToLocaleDateString,
+  dateToLocaleTimeString,
+} from '../../lib/formatDates';
 import { cleanAndCapitalise } from '../../lib/formatStrings';
 import { useWarningOnExit } from '../../lib/useWarningOnExit';
 
@@ -67,6 +82,9 @@ const CUSTOMER_QUERY = gql`
         createdOn
         updatedOn
       }
+      createdOn
+      updatedOn
+      history
     }
   }
 `;
@@ -80,6 +98,8 @@ const CUSTOMER_MUTATION = gql`
       id
       name
       email
+      updatedOn
+      history
     }
   }
 `;
@@ -97,6 +117,7 @@ const Customer = () => {
   const onUndoClose = () => setIsUndoAlertOpen(false);
   const onSaveClose = () => setIsSaveAlertOpen(false);
   const toast = useToast();
+  const user = useUser();
 
   const { data, loading } = useQuery(CUSTOMER_QUERY, {
     variables: {
@@ -107,12 +128,6 @@ const Customer = () => {
   });
 
   const [updateUser] = useMutation(CUSTOMER_MUTATION, {
-    variables: {
-      updateUserWhere: {
-        id: pid,
-      },
-      data: edits,
-    },
     refetchQueries: [{ query: CUSTOMER_QUERY }],
   });
 
@@ -146,7 +161,18 @@ const Customer = () => {
   }
 
   async function saveChanges() {
-    const res = await updateUser();
+    const res = await updateUser({
+      variables: {
+        updateUserWhere: {
+          id: data.user.id,
+        },
+        data: {
+          ...edits,
+          updatedOn: new Date().toISOString(),
+          history: mergeHistory(),
+        },
+      },
+    });
     console.log(res);
     setEdits({});
     setIsSaveAlertOpen(false);
@@ -159,6 +185,24 @@ const Customer = () => {
       duration: 5000,
       isClosable: true,
     });
+  }
+
+  function mergeHistory() {
+    let currentEdits = [];
+    Object.entries(edits).map(([k, v]) => {
+      currentEdits = [
+        ...currentEdits,
+        {
+          field: k,
+          new: v,
+          prev: data.user[k],
+          user: user.name,
+          date: new Date().toISOString(),
+        },
+      ];
+    });
+
+    return { logs: [...data.user.history.logs, ...currentEdits] };
   }
 
   if (loading) return <p>Loading...</p>;
@@ -194,10 +238,11 @@ const Customer = () => {
       <GridItem gridColumn="1/19">
         <Tabs colorScheme="green" mt={8}>
           <TabList pl={3}>
-            <Tab>Orders</Tab>
-            <Tab>Stats</Tab>
-            <Tab>Info</Tab>
-            <Tab>Options</Tab>
+            <Tab fontStyle="italic">Orders</Tab>
+            <Tab fontStyle="italic">Stats</Tab>
+            <Tab fontStyle="italic">Info</Tab>
+            <Tab fontStyle="italic">Options</Tab>
+            <Tab fontStyle="italic">Log</Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
@@ -223,6 +268,33 @@ const Customer = () => {
             <TabPanel />
             <TabPanel />
             <TabPanel />
+            <TabPanel>
+              <Table variant="simple">
+                <TableCaption placement="top">Logs</TableCaption>
+                <Thead>
+                  <Tr>
+                    <Th>Date</Th>
+                    <Th>Time</Th>
+                    <Th>Field</Th>
+                    <Th>Prev. value</Th>
+                    <Th>New value</Th>
+                    <Th>Edited by</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {data.user.history.logs.map((log, i) => (
+                    <Tr key={i}>
+                      <Td>{dateToLocaleDateString(log.date)}</Td>
+                      <Td>{dateToLocaleTimeString(log.date)}</Td>
+                      <Td> {cleanAndCapitalise(log.field)}</Td>
+                      <Td>{log.prev}</Td>
+                      <Td>{log.new}</Td>
+                      <Td>{log.user}</Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </TabPanel>
           </TabPanels>
         </Tabs>
       </GridItem>

@@ -9,6 +9,7 @@ import {
   ButtonGroup,
   AlertIcon,
 } from '@chakra-ui/react';
+import { dateToLocaleString } from '../lib/formatDates';
 import { formatUserNumber, formatMoneyfromPence } from '../lib/formatNumbers';
 import CustomerDetailsGrid from './CustomerDetailsGrid';
 
@@ -94,7 +95,7 @@ const CustomerStatCard = ({ title, unit, background, cardBorder, label }) => (
         right="-2"
       />
     </Tooltip>
-    <Text position="absolute" top="2">
+    <Text position="absolute" top="2" fontStyle="italic">
       {title}
     </Text>
     <Text fontSize="2xl">{unit}</Text>
@@ -139,17 +140,25 @@ const CustomerHead = ({
       marginTop={2}
     >
       <Text as="h1" fontSize="4xl" ml={2}>
-        <Text as="span" color={subtext}>
+        <Text as="span" color={subtext} fontStyle="italic">
           Customer:{' '}
         </Text>
         {data.user.name}
       </Text>
-      <Text as="h2" fontSize="2xl" ml={2}>
-        <Text as="span" color={subtext}>
-          #
+      <Flex align={'center'}>
+        <Text as="h2" fontSize="2xl" ml={2}>
+          <Text as="span" color={subtext} fontStyle="italic">
+            #{' '}
+          </Text>
+          {formatUserNumber(data.user.id)}
         </Text>
-        {formatUserNumber(data.user.id)}
-      </Text>
+        <Text ml="2rem">
+          <Text color={subtext} fontStyle="italic">
+            Last updated at:
+          </Text>
+          {dateToLocaleString(data.user.updatedOn)}
+        </Text>
+      </Flex>
       <EditedContentConfirmation
         hasChanged={hasChanged}
         setIsUndoAlertOpen={setIsUndoAlertOpen}

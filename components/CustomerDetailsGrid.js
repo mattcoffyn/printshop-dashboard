@@ -6,9 +6,10 @@ import {
   IconButton,
   Input,
   Text,
+  useOutsideClick,
 } from '@chakra-ui/react';
 import { CheckIcon, CloseIcon, EditIcon } from '@chakra-ui/icons';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 const CustomerEditableInput = ({
   userValue,
@@ -20,14 +21,16 @@ const CustomerEditableInput = ({
   stageEdits,
 }) => (
   <Box>
-    <Text color={subtext}>{label}</Text>
+    <Text color={subtext} fontStyle="italic">
+      {label}
+    </Text>
     {isEditing ? (
       <Input
         id={inputId}
         variant="outline"
         defaultValue={editedValue || userValue}
         size="sm"
-        onChange={stageEdits}
+        onChange={(e) => stageEdits(e)}
       />
     ) : (
       <Text mb={2} color={editedValue && 'yellow.400'}>
@@ -45,37 +48,56 @@ const CustomerDetailsGrid = ({
   edits,
   setEdits,
 }) => {
+  const ref = useRef();
   const [isEditing, setIsEditing] = useState(false);
-  const [stagingEdits, setStagingEdits] = useState({});
-  const editedColorBorder = !edits.length ? cardBorder : 'yellow.400';
+  const [stagedEdits, setStagedEdits] = useState({});
+  const editedColorBorder =
+    Object.entries(edits).length > 0 ? 'yellow.400' : cardBorder;
 
   function stageEdits(e) {
-    setStagingEdits({
-      ...stagingEdits,
+    setStagedEdits({
+      ...stagedEdits,
       [e.target.id]: e.target.value,
     });
   }
 
   function stopEditing() {
-    Object.entries(stagingEdits).forEach(([k, v]) => {
+    let temp = {};
+    Object.entries(stagedEdits).map(([k, v]) => {
       if (data.user[k] === v) {
-        return null;
+        setEdits((prevEdits) => {
+          const newEdits = { ...prevEdits };
+          delete newEdits[k];
+          return newEdits;
+        });
+      } else {
+        temp = {
+          ...temp,
+          [k]: v,
+        };
       }
-      setEdits({
-        ...edits,
-        [k]: v,
-      });
     });
+    setEdits({
+      ...edits,
+      ...temp,
+    });
+    setStagedEdits({});
     setIsEditing(false);
   }
 
   function stopEditingAndUndo() {
-    setStagingEdits({});
+    setStagedEdits({});
     setIsEditing(false);
   }
 
+  useOutsideClick({
+    ref: ref,
+    handler: () => stopEditing(),
+  });
+
   return (
     <Grid
+      ref={ref}
       gridColumn="2/3"
       gridTemplateColumns="1fr 1fr"
       gap={6}
@@ -137,24 +159,39 @@ const CustomerDetailsGrid = ({
           inputId="name"
           stageEdits={(e) => stageEdits(e)}
         />
-        <Text color={subtext}>Business Name</Text>
+        <Text color={subtext} fontStyle="italic">
+          Business Name
+        </Text>
         <Text>-</Text>
       </Flex>
-      <Flex gridColumn="2/3" direction="column">
-        <Text color={subtext}>Email Address</Text>
-        <Text mb={2}>{data.user.email}</Text>
-        <Text color={subtext}>Contact Number</Text>
+      <Flex gridColumn="2/3" direction="column" paddingRight={10}>
+        <CustomerEditableInput
+          isEditing={isEditing}
+          userValue={data.user.email}
+          editedValue={edits?.email}
+          label="Email Address"
+          subtext={subtext}
+          inputId="email"
+          stageEdits={(e) => stageEdits(e)}
+        />
+        <Text color={subtext} fontStyle="italic">
+          Contact Number
+        </Text>
         <Text>01234 567 890</Text>
       </Flex>
       <Flex gridColumn="1/2" direction="column">
-        <Text color={subtext}>Billing Address</Text>
+        <Text color={subtext} fontStyle="italic">
+          Billing Address
+        </Text>
         <Text>1 Example Street</Text>
         <Text>Radsborough</Text>
         <Text>Coolshire</Text>
         <Text>RD14 1XX</Text>
       </Flex>
       <Flex gridColumn="2/3" direction="column">
-        <Text color={subtext}>Delivery Address:</Text>
+        <Text color={subtext} fontStyle="italic">
+          Delivery Address:
+        </Text>
         <Text>1 Example Street</Text>
         <Text>Radsborough</Text>
         <Text>Coolshire</Text>

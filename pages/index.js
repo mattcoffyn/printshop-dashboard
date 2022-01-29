@@ -9,7 +9,7 @@ import {
 
 import { useQuery } from '@apollo/client';
 import StatsCards from '../components/StatsCards';
-import { useUser } from '../lib/useUser';
+import { useUser } from '../components/User';
 import { GET_ALL_PROCESS_PRODUCTS } from '../components/queries/getAllProcessProducts';
 import DataTable from '../components/Table';
 import { cleanAndCapitalise } from '../lib/formatStrings';

@@ -15,7 +15,7 @@ import {
   Icon,
 } from '@chakra-ui/react';
 import { FiSliders, FiUser } from 'react-icons/fi';
-import { CURRENT_USER_QUERY, SIGNOUT_MUTATION, useUser } from '../lib/useUser';
+import { CURRENT_USER_QUERY, SIGNOUT_MUTATION, useUser } from './User';
 
 export const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();

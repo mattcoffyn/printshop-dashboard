@@ -3,11 +3,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import withData from '../lib/withData';
 import AppLayout from '../components/layouts/AppLayout';
 import theme from '../styles/theme';
-
-import '@fontsource/jost';
-// import '@fontsource/league-spartan';
-
-import '../styles/openprops.css';
+import '@fontsource/ibm-plex-sans';
 
 function MyApp({ Component, pageProps, apollo }) {
   return (

@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react';
 import { Header } from '../Header';
 import { SideNav } from '../SideNav';
-import { useUser } from '../../lib/useUser';
+import { useUser } from '../User';
 import SignInPageComponent from '../SignInPageComponent';
 
 export default function AppLayout({ children }) {
