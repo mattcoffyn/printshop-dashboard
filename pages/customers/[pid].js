@@ -11,7 +11,6 @@ import {
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-
 import {
   CustomerSaveAlert,
   CustomerUndoAlert,
@@ -20,6 +19,10 @@ import CustomerHead from '../../components/customer/CustomerHead';
 import CustomerHistoryTable from '../../components/customer/CustomerHistoryTable';
 import CustomerTable from '../../components/customer/CustomerOrdersTable';
 import { useUser } from '../../components/User';
+import {
+  dateToLocaleDateString,
+  dateToLocaleTimeString,
+} from '../../lib/formatDates';
 import { cleanAndCapitalise } from '../../lib/formatStrings';
 import { useWarningOnExit } from '../../lib/useWarningOnExit';
 
@@ -256,7 +259,16 @@ const Customer = () => {
             <TabPanel />
             <TabPanel />
             <TabPanel>
-              <CustomerHistoryTable history={data.user.history} />
+              <CustomerHistoryTable
+                cardBorder={cardBorder}
+                data={data.user.history.logs.map((log) => ({
+                  dateTime: log.date,
+                  field: cleanAndCapitalise(log.field),
+                  prev: log.prev,
+                  new: log.new,
+                  user: log.user,
+                }))}
+              />
             </TabPanel>
           </TabPanels>
         </Tabs>
