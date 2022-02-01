@@ -13,6 +13,8 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import useForm from '../lib/useForm';
 import { CURRENT_USER_QUERY, useUser } from './User';
 
@@ -88,12 +90,18 @@ const LoginError = ({ error, children }) => {
 };
 
 const SignInPageComponent = () => {
+  const router = useRouter();
   const border = useColorModeValue('gray.300', 'gray.700');
   const user = useUser();
   const { inputs, handleChange } = useForm({
     email: '',
     password: '',
   });
+
+  useEffect(() => {
+    // Prefetch the dashboard page
+    router.prefetch('/dashboard');
+  }, [router]);
 
   const [signin, { data }] = useMutation(SIGNIN_MUTATION, {
     variables: inputs,
@@ -104,8 +112,12 @@ const SignInPageComponent = () => {
   async function handleSubmit(e) {
     e.preventDefault();
     const res = await signin();
-
-    // Send the email and password to the graphqlAPI
+    if (
+      res.data.authenticateUserWithPassword.__typename ===
+      'UserAuthenticationWithPasswordSuccess'
+    ) {
+      router.push('/dashboard');
+    }
   }
   const error =
     data?.authenticateUserWithPassword.__typename ===

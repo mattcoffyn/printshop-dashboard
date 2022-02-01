@@ -8,18 +8,20 @@ import {
 } from '@chakra-ui/react';
 
 import { useQuery } from '@apollo/client';
-import StatsCards from '../components/StatsCards';
-import { useUser } from '../context/user';
-import { GET_ALL_PROCESS_PRODUCTS } from '../components/queries/getAllProcessProducts';
-import DataTable from '../components/Table';
-import { cleanAndCapitalise } from '../lib/formatStrings';
+import StatsCards from '../../components/StatsCards';
+import { useUser } from '../../context/user';
+import { GET_ALL_PROCESS_PRODUCTS } from '../../components/queries/getAllProcessProducts';
+import DataTable from '../../components/Table';
+import { cleanAndCapitalise } from '../../lib/formatStrings';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import AppLayout from '../../components/layouts/AppLayout';
 
-const Home = () => {
+const Dashboard = () => {
   const { user } = useUser();
   const border = useColorModeValue('gray.300', 'gray.700');
   const cardBorder = useColorModeValue('gray.200', 'gray.800');
   const background = useColorModeValue('gray.100', 'gray.800');
-  // const data = useMemo(() => makeData(100), []);
   const { data, loading, error } = useQuery(GET_ALL_PROCESS_PRODUCTS);
 
   if (loading) return <CircularProgress isIndeterminate color="green.300" />;
@@ -76,4 +78,8 @@ const Home = () => {
   );
 };
 
-export default Home;
+Dashboard.getLayout = function getLayout(page) {
+  return <AppLayout>{page}</AppLayout>;
+};
+
+export default Dashboard;

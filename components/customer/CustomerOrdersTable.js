@@ -31,8 +31,12 @@ import {
 } from '@chakra-ui/icons';
 import { useTable, useSortBy, usePagination } from 'react-table';
 import Link from 'next/link';
-import { formatMoneyfromPence, formatSO, formatWO } from '../lib/formatNumbers';
-import { dateToLocaleString } from '../lib/formatDates';
+import {
+  formatMoneyfromPence,
+  formatSO,
+  formatWO,
+} from '../../lib/formatNumbers';
+import { dateToLocaleString } from '../../lib/formatDates';
 
 const createCell = ({ row }) => (
   <Menu placement="bottom-end">

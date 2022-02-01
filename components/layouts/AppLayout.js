@@ -1,46 +1,14 @@
-import { useEffect } from 'react';
-import {
-  Flex,
-  Grid,
-  GridItem,
-  useColorModeValue,
-  useToast,
-} from '@chakra-ui/react';
+import { Flex, Grid, GridItem, useColorModeValue } from '@chakra-ui/react';
 import { Header } from '../Header';
 import { SideNav } from '../SideNav';
-import { useUser } from '../User';
+import { useUser } from '../../context/user';
 import SignInPageComponent from '../SignInPageComponent';
 
 export default function AppLayout({ children }) {
   const background = useColorModeValue('#F7FAFC', '#171923');
   // const { user, previousData } = useUser();
-  const user = useUser();
+  const { user } = useUser();
   const isLoggedIn = !!user;
-  // const toast = useToast();
-
-  // useEffect(() => {
-  //   if (!isLoggedIn && !!previousData) {
-  //     console.log(previousData);
-  //     toast({
-  //       title: 'Logged Out',
-  //       description: `See you soon 👋`,
-  //       status: 'success',
-  //       duration: 4000,
-  //       isClosable: true,
-  //       position: 'top',
-  //     });
-  //   }
-  //   if (!!isLoggedIn && !!previousData) {
-  //     toast({
-  //       title: 'Logged In',
-  //       description: `Welcome ${user.name} 🥳`,
-  //       status: 'success',
-  //       duration: 4000,
-  //       isClosable: true,
-  //       position: 'top',
-  //     });
-  //   }
-  // }, [user?.name, previousData, toast, isLoggedIn]);
 
   return (
     <>

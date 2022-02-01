@@ -9,8 +9,11 @@ import {
   ButtonGroup,
   AlertIcon,
 } from '@chakra-ui/react';
-import { dateToLocaleString } from '../lib/formatDates';
-import { formatUserNumber, formatMoneyfromPence } from '../lib/formatNumbers';
+import { dateToLocaleString } from '../../lib/formatDates';
+import {
+  formatUserNumber,
+  formatMoneyfromPence,
+} from '../../lib/formatNumbers';
 import CustomerDetailsGrid from './CustomerDetailsGrid';
 
 const EditedContentConfirmation = ({
@@ -152,11 +155,15 @@ const CustomerHead = ({
           </Text>
           {formatUserNumber(data.user.id)}
         </Text>
-        <Text ml="2rem">
-          <Text color={subtext} fontStyle="italic">
+        <Text as="h2" ml="2rem">
+          <Text as="span" mr={2} color={subtext} fontStyle="italic">
             Last updated at:
           </Text>
           {dateToLocaleString(data.user.updatedOn)}
+          <Text as="span" ml="1rem" mr={2} color={subtext} fontStyle="italic">
+            by:
+          </Text>
+          {data.user.history.logs.at(-1).user}
         </Text>
       </Flex>
       <EditedContentConfirmation

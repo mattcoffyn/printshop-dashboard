@@ -190,7 +190,7 @@ const CustomerDetailsGrid = ({
       </Flex>
       <Flex gridColumn="2/3" direction="column">
         <Text color={subtext} fontStyle="italic">
-          Delivery Address:
+          Delivery Address
         </Text>
         <Text>1 Example Street</Text>
         <Text>Radsborough</Text>

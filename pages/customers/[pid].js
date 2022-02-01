@@ -24,9 +24,9 @@ import { useEffect, useState } from 'react';
 import {
   CustomerSaveAlert,
   CustomerUndoAlert,
-} from '../../components/CustomerEditAlerts';
-import CustomerHead from '../../components/CustomerHead';
-import CustomerTable from '../../components/CustomerLogsTable';
+} from '../../components/customer/CustomerEditAlerts';
+import CustomerHead from '../../components/customer/CustomerHead';
+import CustomerTable from '../../components/customer/CustomerOrdersTable';
 import { useUser } from '../../components/User';
 import {
   dateToLocaleDateString,
@@ -173,7 +173,7 @@ const Customer = () => {
         },
       },
     });
-    console.log(res);
+
     setEdits({});
     setIsSaveAlertOpen(false);
     toast({
@@ -201,7 +201,6 @@ const Customer = () => {
         },
       ];
     });
-
     return { logs: [...data.user.history.logs, ...currentEdits] };
   }
 
@@ -242,7 +241,7 @@ const Customer = () => {
             <Tab fontStyle="italic">Stats</Tab>
             <Tab fontStyle="italic">Info</Tab>
             <Tab fontStyle="italic">Options</Tab>
-            <Tab fontStyle="italic">Log</Tab>
+            <Tab fontStyle="italic">History</Tab>
           </TabList>
           <TabPanels>
             <TabPanel>

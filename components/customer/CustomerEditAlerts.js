@@ -15,7 +15,7 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import React, { useRef } from 'react';
-import { cleanAndCapitalise } from '../lib/formatStrings';
+import { cleanAndCapitalise } from '../../lib/formatStrings';
 
 export const CustomerUndoAlert = ({
   isUndoAlertOpen,
