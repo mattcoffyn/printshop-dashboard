@@ -1,20 +1,11 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
 import {
-  Button,
   GridItem,
   Tab,
-  Table,
-  TableCaption,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
-  Tbody,
-  Td,
-  Tfoot,
-  Th,
-  Thead,
-  Tr,
   useColorModeValue,
   useToast,
 } from '@chakra-ui/react';
@@ -26,12 +17,9 @@ import {
   CustomerUndoAlert,
 } from '../../components/customer/CustomerEditAlerts';
 import CustomerHead from '../../components/customer/CustomerHead';
+import CustomerHistoryTable from '../../components/customer/CustomerHistoryTable';
 import CustomerTable from '../../components/customer/CustomerOrdersTable';
 import { useUser } from '../../components/User';
-import {
-  dateToLocaleDateString,
-  dateToLocaleTimeString,
-} from '../../lib/formatDates';
 import { cleanAndCapitalise } from '../../lib/formatStrings';
 import { useWarningOnExit } from '../../lib/useWarningOnExit';
 
@@ -268,31 +256,7 @@ const Customer = () => {
             <TabPanel />
             <TabPanel />
             <TabPanel>
-              <Table variant="simple">
-                <TableCaption placement="top">Logs</TableCaption>
-                <Thead>
-                  <Tr>
-                    <Th>Date</Th>
-                    <Th>Time</Th>
-                    <Th>Field</Th>
-                    <Th>Prev. value</Th>
-                    <Th>New value</Th>
-                    <Th>Edited by</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {data.user.history.logs.map((log, i) => (
-                    <Tr key={i}>
-                      <Td>{dateToLocaleDateString(log.date)}</Td>
-                      <Td>{dateToLocaleTimeString(log.date)}</Td>
-                      <Td> {cleanAndCapitalise(log.field)}</Td>
-                      <Td>{log.prev}</Td>
-                      <Td>{log.new}</Td>
-                      <Td>{log.user}</Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-              </Table>
+              <CustomerHistoryTable history={data.user.history} />
             </TabPanel>
           </TabPanels>
         </Tabs>
