@@ -51,7 +51,10 @@ const createCell = ({ row }) => (
     </MenuButton>
     <MenuList>
       <MenuItem>
-        <Link href="/">View Order</Link>
+        <Link href="/">View Job</Link>
+      </MenuItem>
+      <MenuItem>
+        <Link href={`/orders/${row.original.orderId}`}>View Parent Order</Link>
       </MenuItem>
       <MenuItem>
         <Link href={`/customers/${row.original.customerId}`}>
