@@ -14,7 +14,7 @@ import {
   formatUserNumber,
   formatMoneyfromPence,
 } from '../../lib/formatNumbers';
-import CustomerDetailsGrid from './CustomerDetailsGrid';
+// import CustomerDetailsGrid from '../customer/CustomerDetailsGrid';
 
 const EditedContentConfirmation = ({
   hasChanged,
@@ -134,7 +134,7 @@ function getLifetimeSpend(orders) {
   return total;
 }
 
-const CustomerHead = ({
+const OrderHead = ({
   subtext,
   background,
   cardBorder,
@@ -156,16 +156,16 @@ const CustomerHead = ({
     >
       <Text as="h1" fontSize="4xl" ml={2}>
         <Text as="span" color={subtext} fontStyle="italic">
-          Customer:{' '}
+          #{' '}
         </Text>
-        {data.user.name}
+        {formatUserNumber(data.order.id)}
       </Text>
       <Flex>
         <Text as="h2" fontSize="2xl" ml={2} mt={1}>
           <Text as="span" color={subtext} fontStyle="italic">
-            #{' '}
+            Customer:{' '}
           </Text>
-          {formatUserNumber(data.user.id)}
+          {data.order.user.name}
         </Text>
         <Flex
           background={background}
@@ -181,13 +181,13 @@ const CustomerHead = ({
             <Text as="span" mr={2} color={subtext} fontStyle="italic">
               Last updated:
             </Text>
-            {dateToLocaleString(data.user.updatedOn)}
+            {dateToLocaleString(data.order.updatedOn)}
           </Text>
           <Text as="h2">
             <Text as="span" mr={2} color={subtext} fontStyle="italic">
               by:
             </Text>
-            {data.user.history.logs.at(-1).user}
+            {data.order.history?.logs.at(-1).user}
           </Text>
         </Flex>
       </Flex>
@@ -196,7 +196,7 @@ const CustomerHead = ({
         setIsUndoAlertOpen={setIsUndoAlertOpen}
         setIsSaveAlertOpen={setIsSaveAlertOpen}
       />
-      <Flex
+      {/* <Flex
         width="100%"
         height="10rem"
         mt={4}
@@ -229,17 +229,17 @@ const CustomerHead = ({
           cardBorder={cardBorder}
           label="Total customer spend incl. shipping & charges."
         />
-      </Flex>
+      </Flex> */}
     </Flex>
-    <CustomerDetailsGrid
+    {/* <CustomerDetailsGrid
       data={data}
       edits={edits}
       setEdits={setEdits}
       background={background}
       cardBorder={cardBorder}
       subtext={subtext}
-    />
+    /> */}
   </Grid>
 );
 
-export default CustomerHead;
+export default OrderHead;

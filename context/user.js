@@ -18,18 +18,18 @@ const Context = createContext();
 
 const Provider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const { data: userData, loading } = useQuery(CURRENT_USER_QUERY);
-  const [user, setUser] = useState(userData?.authenticatedItem);
+  const { data, loading } = useQuery(CURRENT_USER_QUERY);
+  const [user, setUser] = useState(data?.authenticatedItem);
 
   useEffect(() => {
     if (loading) {
       setIsLoading(true);
     }
-    if (userData) {
-      setUser(userData.authenticatedItem);
+    if (data) {
+      setUser(data.authenticatedItem);
       setIsLoading(false);
     }
-  }, [userData, loading]);
+  }, [data, loading]);
 
   const exposed = { user, isLoading };
   return <Context.Provider value={exposed}>{children}</Context.Provider>;

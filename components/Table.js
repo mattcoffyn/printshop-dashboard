@@ -45,11 +45,15 @@ const createCell = ({ row }) => (
       Actions
     </MenuButton>
     <MenuList>
-      <Link href="/" passHref>
-        <MenuItem>View Order</MenuItem>
+      <Link href={`/orders/${row.original.id}`}>
+        <a>
+          <MenuItem>View Order</MenuItem>
+        </a>
       </Link>
-      <Link href={`/customers/${row.original.customerId}`} passHref>
-        <MenuItem>View Customer</MenuItem>
+      <Link href={`/customers/${row.original.customerId}`}>
+        <a>
+          <MenuItem>View Customer</MenuItem>
+        </a>
       </Link>
       <Link href="/" passHref>
         <MenuItem>Mark as Complete</MenuItem>
