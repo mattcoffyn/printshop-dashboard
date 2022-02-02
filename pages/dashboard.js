@@ -1,13 +1,10 @@
 import {
   Box,
-  CircularProgress,
   Flex,
   GridItem,
   Text,
   useColorModeValue,
   Skeleton,
-  SkeletonCircle,
-  SkeletonText,
 } from '@chakra-ui/react';
 
 import { useQuery } from '@apollo/client';
@@ -74,11 +71,13 @@ const Home = () => {
         borderRadius="lg"
         // bg={background}
       >
-        <StatsCards
-          data={data}
-          background={background}
-          cardBorder={cardBorder}
-        />
+        <Skeleton isLoaded={!loading}>
+          <StatsCards
+            data={data}
+            background={background}
+            cardBorder={cardBorder}
+          />
+        </Skeleton>
       </Box>
     </>
   );
