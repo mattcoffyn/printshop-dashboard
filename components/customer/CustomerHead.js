@@ -27,29 +27,35 @@ const EditedContentConfirmation = ({
       <Alert
         position="absolute"
         top="0.5rem"
-        right="8rem"
+        right="4rem"
         status="warning"
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
         textAlign="center"
-        height="5rem"
-        maxWidth="16rem"
+        maxWidth="20rem"
         borderWidth={1}
         borderColor="yellow.400"
         borderRadius="md"
         bg="gray.800"
         color="white"
+        px={4}
       >
-        <Flex width="100%" justifyContent="flex-start">
+        <Flex width="100%" justifyContent="flex-start" my={2}>
           <AlertIcon color="yellow.400" />
           <p>You have unsaved edits.</p>
         </Flex>
-        <ButtonGroup mt={2} width="100%" justifyContent="flex-end">
+        <ButtonGroup mt={2} mb={2} width="100%" justifyContent="flex-end">
           <Button
             size="xs"
             variant="solid"
             color="gray.900"
+            fontWeight={'500'}
+            fontSize={'md'}
+            pt={4}
+            pb={4}
+            px={6}
+            // letterSpacing={'0.05rem'}
             bg="yellow.400"
             leftIcon={<ViewIcon />}
             onClick={() => setIsSaveAlertOpen(true)}
@@ -59,6 +65,11 @@ const EditedContentConfirmation = ({
           <Button
             size="xs"
             variant="solid"
+            fontWeight={'500'}
+            fontSize={'md'}
+            pt={4}
+            pb={4}
+            px={3}
             // colorScheme="blackAlpha"
             leftIcon={<CloseIcon />}
             onClick={() => setIsUndoAlertOpen(true)}
@@ -141,6 +152,7 @@ const CustomerHead = ({
       align="start"
       direction="column"
       marginTop={2}
+      marginRight={2}
     >
       <Text as="h1" fontSize="4xl" ml={2}>
         <Text as="span" color={subtext} fontStyle="italic">
@@ -148,23 +160,36 @@ const CustomerHead = ({
         </Text>
         {data.user.name}
       </Text>
-      <Flex align={'center'}>
-        <Text as="h2" fontSize="2xl" ml={2}>
+      <Flex>
+        <Text as="h2" fontSize="2xl" ml={2} mt={1}>
           <Text as="span" color={subtext} fontStyle="italic">
             #{' '}
           </Text>
           {formatUserNumber(data.user.id)}
         </Text>
-        <Text as="h2" ml="2rem">
-          <Text as="span" mr={2} color={subtext} fontStyle="italic">
-            Last updated at:
+        <Flex
+          background={background}
+          ml="2rem"
+          p={2}
+          br="lg"
+          borderRadius="lg"
+          borderWidth={1}
+          borderColor={cardBorder}
+          direction={'column'}
+        >
+          <Text as="h2">
+            <Text as="span" mr={2} color={subtext} fontStyle="italic">
+              Last updated:
+            </Text>
+            {dateToLocaleString(data.user.updatedOn)}
           </Text>
-          {dateToLocaleString(data.user.updatedOn)}
-          <Text as="span" ml="1rem" mr={2} color={subtext} fontStyle="italic">
-            by:
+          <Text as="h2">
+            <Text as="span" mr={2} color={subtext} fontStyle="italic">
+              by:
+            </Text>
+            {data.user.history.logs.at(-1).user}
           </Text>
-          {data.user.history.logs.at(-1).user}
-        </Text>
+        </Flex>
       </Flex>
       <EditedContentConfirmation
         hasChanged={hasChanged}
@@ -177,7 +202,7 @@ const CustomerHead = ({
         mt={4}
         pt={6}
         // borderTopColor={border}
-        // borderTopWidth={1}
+        borderTopWidth={1}
         alignItems="center"
         justifyContent="space-around"
       >
