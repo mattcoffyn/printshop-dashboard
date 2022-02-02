@@ -1,17 +1,23 @@
 import { useQuery } from '@apollo/client';
-import { Flex, SimpleGrid, Text } from '@chakra-ui/react';
+import {
+  Flex,
+  SimpleGrid,
+  Text,
+  Skeleton,
+  SkeletonCircle,
+  SkeletonText,
+} from '@chakra-ui/react';
 import { GET_ALL_PROCESS_PRODUCTS } from './queries/getAllProcessProducts';
 
 const StatsCards = ({ background, cardBorder }) => {
   const { data, loading, error } = useQuery(GET_ALL_PROCESS_PRODUCTS);
   // const border = useColorModeValue('gray.300', 'gray.700');
 
-  if (loading) return <p>Loading..</p>;
   if (error) return <p>{error.message}</p>;
 
   function getStatusCount(status) {
     const count = { pending: 0, developing: 0, scanning: 0, complete: 0 };
-    data.processProducts.map((order) => {
+    data?.processProducts.map((order) => {
       if (order.status === 'AWAITING_FILM') {
         count.pending += 1;
       }
@@ -40,67 +46,75 @@ const StatsCards = ({ background, cardBorder }) => {
 
   return (
     <SimpleGrid columns={1} spacing="1rem" px={0}>
-      <Flex
-        align="center"
-        direction="column"
-        justifyContent="center"
-        borderColor={cardBorder}
-        borderWidth="1px"
-        borderRadius="lg"
-        p={2}
-        bg={background}
-        style={{ aspectRatio: '1/1' }}
-      >
-        <h3>Awaiting Film</h3>
-        <Text fontSize="2xl" margin="auto" pb={3}>
-          {getStatusCount('pending')}
-        </Text>
-      </Flex>
-      <Flex
-        align="center"
-        direction="column"
-        borderColor={cardBorder}
-        borderWidth="1px"
-        borderRadius="lg"
-        p={2}
-        bg={background}
-        style={{ aspectRatio: '1/1' }}
-      >
-        <h3>Developing</h3>
-        <Text fontSize="2xl" margin="auto" pb={3}>
-          {getStatusCount('developing')}
-        </Text>
-      </Flex>
-      <Flex
-        align="center"
-        direction="column"
-        borderColor={cardBorder}
-        borderWidth="1px"
-        borderRadius="md"
-        p={2}
-        bg={background}
-        style={{ aspectRatio: '1/1' }}
-      >
-        <h3>Scanning</h3>
-        <Text fontSize="2xl" margin="auto" pb={3}>
-          {getStatusCount('scanning')}
-        </Text>
-      </Flex>
-      <Flex
-        align="center"
-        direction="column"
-        borderColor={cardBorder}
-        borderWidth="1px"
-        borderRadius="md"
-        p={2}
-        bg={background}
-        style={{ aspectRatio: '1/1' }}
-      >
-        <h3>Ready to Ship</h3>
-        <Text fontSize="2xl" margin="auto" pb={3}>
-          {getStatusCount('complete')}
-        </Text>
-      </Flex>
+      <Skeleton isLoaded={!loading}>
+        <Flex
+          align="center"
+          direction="column"
+          justifyContent="center"
+          borderColor={cardBorder}
+          borderWidth="1px"
+          borderRadius="lg"
+          p={2}
+          bg={background}
+          style={{ aspectRatio: '1/1' }}
+        >
+          <h3>Awaiting Film</h3>
+          <Text fontSize="2xl" margin="auto" pb={3}>
+            {getStatusCount('pending')}
+          </Text>
+        </Flex>
+      </Skeleton>
+      <Skeleton isLoaded={!loading}>
+        <Flex
+          align="center"
+          direction="column"
+          borderColor={cardBorder}
+          borderWidth="1px"
+          borderRadius="lg"
+          p={2}
+          bg={background}
+          style={{ aspectRatio: '1/1' }}
+        >
+          <h3>Developing</h3>
+          <Text fontSize="2xl" margin="auto" pb={3}>
+            {getStatusCount('developing')}
+          </Text>
+        </Flex>
+      </Skeleton>
+      <Skeleton isLoaded={!loading}>
+        <Flex
+          align="center"
+          direction="column"
+          borderColor={cardBorder}
+          borderWidth="1px"
+          borderRadius="md"
+          p={2}
+          bg={background}
+          style={{ aspectRatio: '1/1' }}
+        >
+          <h3>Scanning</h3>
+          <Text fontSize="2xl" margin="auto" pb={3}>
+            {getStatusCount('scanning')}
+          </Text>
+        </Flex>
+      </Skeleton>
+      <Skeleton isLoaded={!loading}>
+        <Flex
+          align="center"
+          direction="column"
+          borderColor={cardBorder}
+          borderWidth="1px"
+          borderRadius="md"
+          p={2}
+          bg={background}
+          style={{ aspectRatio: '1/1' }}
+        >
+          <h3>Ready to Ship</h3>
+          <Text fontSize="2xl" margin="auto" pb={3}>
+            {getStatusCount('complete')}
+          </Text>
+        </Flex>
+      </Skeleton>
     </SimpleGrid>
   );
 };
