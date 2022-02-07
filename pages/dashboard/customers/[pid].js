@@ -6,35 +6,51 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
   useColorModeValue,
   useToast,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import OrderHead from '../../components/order/OrderHead';
-// import {
-// CustomerSaveAlert,
-// CustomerUndoAlert,
-// } from '../../components/customer/CustomerEditAlerts';
-// import CustomerHead from '../../components/customer/CustomerHead';
-// import CustomerHistoryTable from '../../components/customer/CustomerHistoryTable';
-// import CustomerTable from '../../components/customer/CustomerOrdersTable';
-import { useUser } from '../../components/User';
-// import {
-//   dateToLocaleDateString,
-//   dateToLocaleTimeString,
-// } from '../../lib/formatDates';
-import { cleanAndCapitalise } from '../../lib/formatStrings';
-import { useWarningOnExit } from '../../lib/useWarningOnExit';
+import {
+  CustomerSaveAlert,
+  CustomerUndoAlert,
+} from '../../../components/customer/CustomerEditAlerts';
+import CustomerHead from '../../../components/customer/CustomerHead';
+import CustomerHistoryTable from '../../../components/customer/CustomerHistoryTable';
+import CustomerTable from '../../../components/customer/CustomerOrdersTable';
+import { useUser } from '../../../components/User';
+import {
+  dateToLocaleDateString,
+  dateToLocaleTimeString,
+} from '../../../lib/formatDates';
+import { cleanAndCapitalise } from '../../../lib/formatStrings';
+import { useWarningOnExit } from '../../../lib/useWarningOnExit';
 
-const ORDER_QUERY = gql`
-  query ORDER_QUERY($id: OrderWhereUniqueInput!) {
-    order(where: $id) {
+const CUSTOMER_QUERY = gql`
+  query CUSTOMER_QUERY($id: UserWhereUniqueInput!) {
+    user(where: $id) {
       id
-      total
+      name
+      email
+      role {
+        id
+        name
+      }
+      cart {
+        quantity
+        id
+        product {
+          name
+          id
+        }
+      }
       processProducts {
         id
-        notes
         noDevelop
         noScans
         isSingle
@@ -46,41 +62,43 @@ const ORDER_QUERY = gql`
         filmColour {
           id
           name
-          description
         }
         scanResolution {
           id
           name
-          description
         }
         singleQuantity
         status
+        order {
+          id
+          total
+          processProductsCount
+        }
+        price
+        createdOn
+        updatedOn
       }
-      user {
-        id
-        name
-        email
-      }
-      createdAt
-      updatedAt
+      createdOn
+      updatedOn
+      history
     }
   }
 `;
 
-// const CUSTOMER_MUTATION = gql`
-//   mutation CUSTOMER_MUTATION(
-//     $updateUserWhere: UserWhereUniqueInput!
-//     $data: UserUpdateInput!
-//   ) {
-//     updateUser(where: $updateUserWhere, data: $data) {
-//       id
-//       name
-//       email
-//       updatedOn
-//       history
-//     }
-//   }
-// `;
+const CUSTOMER_MUTATION = gql`
+  mutation CUSTOMER_MUTATION(
+    $updateUserWhere: UserWhereUniqueInput!
+    $data: UserUpdateInput!
+  ) {
+    updateUser(where: $updateUserWhere, data: $data) {
+      id
+      name
+      email
+      updatedOn
+      history
+    }
+  }
+`;
 
 const Customer = () => {
   const router = useRouter();
@@ -97,7 +115,7 @@ const Customer = () => {
   const toast = useToast();
   const user = useUser();
 
-  const { data, loading } = useQuery(ORDER_QUERY, {
+  const { data, loading } = useQuery(CUSTOMER_QUERY, {
     variables: {
       id: {
         id: pid,
@@ -105,9 +123,9 @@ const Customer = () => {
     },
   });
 
-  // const [updateUser] = useMutation(CUSTOMER_MUTATION, {
-  //   refetchQueries: [{ query: CUSTOMER_QUERY }],
-  // });
+  const [updateUser] = useMutation(CUSTOMER_MUTATION, {
+    refetchQueries: [{ query: CUSTOMER_QUERY }],
+  });
 
   useWarningOnExit(
     Object.keys(edits).length > 0,
@@ -138,55 +156,55 @@ const Customer = () => {
     });
   }
 
-  // async function saveChanges() {
-  //   const res = await updateUser({
-  //     variables: {
-  //       updateUserWhere: {
-  //         id: data.user.id,
-  //       },
-  //       data: {
-  //         ...edits,
-  //         updatedOn: new Date().toISOString(),
-  //         history: mergeHistory(),
-  //       },
-  //     },
-  //   });
+  async function saveChanges() {
+    const res = await updateUser({
+      variables: {
+        updateUserWhere: {
+          id: data.user.id,
+        },
+        data: {
+          ...edits,
+          updatedOn: new Date().toISOString(),
+          history: mergeHistory(),
+        },
+      },
+    });
 
-  //   setEdits({});
-  //   setIsSaveAlertOpen(false);
-  //   toast({
-  //     title: 'Changes Saved!.',
-  //     description: 'All changes have been saved',
-  //     status: 'success',
-  //     variant: 'solid',
-  //     position: 'top',
-  //     duration: 5000,
-  //     isClosable: true,
-  //   });
-  // }
+    setEdits({});
+    setIsSaveAlertOpen(false);
+    toast({
+      title: 'Changes Saved!.',
+      description: 'All changes have been saved',
+      status: 'success',
+      variant: 'solid',
+      position: 'top',
+      duration: 5000,
+      isClosable: true,
+    });
+  }
 
-  // function mergeHistory() {
-  //   let currentEdits = [];
-  //   Object.entries(edits).map(([k, v]) => {
-  //     currentEdits = [
-  //       ...currentEdits,
-  //       {
-  //         field: k,
-  //         new: v,
-  //         prev: data.user[k],
-  //         user: user.name,
-  //         date: new Date().toISOString(),
-  //       },
-  //     ];
-  //   });
-  //   return { logs: [...data.user.history.logs, ...currentEdits] };
-  // }
+  function mergeHistory() {
+    let currentEdits = [];
+    Object.entries(edits).map(([k, v]) => {
+      currentEdits = [
+        ...currentEdits,
+        {
+          field: k,
+          new: v,
+          prev: data.user[k],
+          user: user.name,
+          date: new Date().toISOString(),
+        },
+      ];
+    });
+    return { logs: [...data.user.history.logs, ...currentEdits] };
+  }
 
   if (loading) return <p>Loading...</p>;
 
   return (
     <>
-      {/* <CustomerUndoAlert
+      <CustomerUndoAlert
         isUndoAlertOpen={isUndoAlertOpen}
         onClose={onUndoClose}
         revertChanges={() => revertChanges()}
@@ -199,8 +217,8 @@ const Customer = () => {
         saveChanges={() => saveChanges()}
         edits={edits}
         data={data}
-      /> */}
-      <OrderHead
+      />
+      <CustomerHead
         data={data}
         edits={edits}
         setEdits={setEdits}
@@ -223,7 +241,7 @@ const Customer = () => {
           </TabList>
           <TabPanels>
             <TabPanel>
-              {/* <CustomerTable
+              <CustomerTable
                 cardBorder={cardBorder}
                 data={data.user.processProducts.map((process) => ({
                   orderId: process.order.id,
@@ -240,13 +258,13 @@ const Customer = () => {
                   createdOn: process.createdOn,
                   updatedOn: process.updatedOn,
                 }))}
-              /> */}
+              />
             </TabPanel>
             <TabPanel />
             <TabPanel />
             <TabPanel />
             <TabPanel>
-              {/* <CustomerHistoryTable
+              <CustomerHistoryTable
                 cardBorder={cardBorder}
                 data={data.user.history.logs.map((log) => ({
                   dateTime: log.date,
@@ -255,7 +273,7 @@ const Customer = () => {
                   new: log.new,
                   user: log.user,
                 }))}
-              /> */}
+              />
             </TabPanel>
           </TabPanels>
         </Tabs>

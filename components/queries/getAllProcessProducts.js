@@ -32,14 +32,12 @@ export const GET_ALL_PROCESS_PRODUCTS = gql`
       order {
         id
         charge
-      }
-      user {
-        id
-        name
-        email
-        role {
+        user {
           id
-          name
+          customerNumber
+          firstName
+          secondName
+          email
         }
       }
     }

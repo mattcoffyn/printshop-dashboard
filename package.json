@@ -25,8 +25,11 @@
     "@stripe/stripe-js": "^1.11.0",
     "apollo-upload-client": "^17.0.0",
     "deepmerge": "^4.2.2",
+    "downshift": "^6.1.7",
     "framer-motion": "^5.6.0",
     "graphql": "^16.2.0",
+    "lodash": "^4.17.21",
+    "lodash.debounce": "^4.0.8",
     "match-sorter": "^6.3.1",
     "namor": "^2.0.3",
     "next": "^12.0.10",
@@ -35,7 +38,8 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-icons": "^4.3.1",
-    "react-table": "^7.7.0"
+    "react-table": "^7.7.0",
+    "styled-components": "^5.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.16.7",

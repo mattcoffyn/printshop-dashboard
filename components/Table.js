@@ -45,12 +45,12 @@ const createCell = ({ row }) => (
       Actions
     </MenuButton>
     <MenuList>
-      <Link href={`/orders/${row.original.id}`}>
+      <Link href={`/dashboard/orders/${row.original.id}`}>
         <a>
           <MenuItem>View Order</MenuItem>
         </a>
       </Link>
-      <Link href={`/customers/${row.original.customerId}`}>
+      <Link href={`/dashboard/customers/${row.original.customerId}`}>
         <a>
           <MenuItem>View Customer</MenuItem>
         </a>
@@ -98,8 +98,8 @@ function DataTable({ data }) {
           },
           {
             Header: 'Customer',
-            accessor: 'name',
-            id: 'customerId',
+            accessor: (row) => `${row.firstName} ${row.secondName}`,
+            id: 'name',
           },
           {
             Header: 'Film Type',

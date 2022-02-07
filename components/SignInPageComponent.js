@@ -16,7 +16,7 @@ import {
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import useForm from '../lib/useForm';
-import { CURRENT_USER_QUERY, useUser } from './User';
+import { CURRENT_USER_QUERY, useUser } from '../context/user';
 
 const SIGNIN_MUTATION = gql`
   mutation SIGNIN_MUTATION($email: String!, $password: String!) {
@@ -25,7 +25,8 @@ const SIGNIN_MUTATION = gql`
         item {
           id
           email
-          name
+          firstName
+          secondName
         }
         sessionToken
       }

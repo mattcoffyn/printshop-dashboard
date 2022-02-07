@@ -98,7 +98,7 @@ export const SideNav = () => {
       >
         <NavLink icon={MdOutlineSpaceDashboard} label="Dashboard" url="/" />
         <NavLink icon={RiInboxArchiveLine} label="Goods In" url="/about" />
-        <NavLink icon={VscColorMode} label="Developing" url="/" />
+        <NavLink icon={VscColorMode} label="Developing" url="/search" />
         <NavLink icon={AiOutlineScan} label="Scanning" url="/" />
         <NavLink icon={MdOutlineLocalShipping} label="Shipping" url="/" />
 

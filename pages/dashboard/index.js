@@ -8,11 +8,11 @@ import {
 } from '@chakra-ui/react';
 
 import { useQuery } from '@apollo/client';
-import StatsCards from '../components/StatsCards';
-import { useUser } from '../context/user';
-import { GET_ALL_PROCESS_PRODUCTS } from '../components/queries/getAllProcessProducts';
-import DataTable from '../components/Table';
-import { cleanAndCapitalise } from '../lib/formatStrings';
+import StatsCards from '../../components/StatsCards';
+import { useUser } from '../../context/user';
+import { GET_ALL_PROCESS_PRODUCTS } from '../../components/queries/getAllProcessProducts';
+import DataTable from '../../components/Table';
+import { cleanAndCapitalise } from '../../lib/formatStrings';
 
 const Home = () => {
   const { user } = useUser();
@@ -30,7 +30,7 @@ const Home = () => {
         <Skeleton isLoaded={!loading}>
           <Flex align="center" mb="3.5rem" height="6rem">
             <Text as="h1" fontSize="4xl" p={0} ml={8}>
-              {`Welcome ${user?.name}`}
+              {`Welcome ${user?.firstName} ${user?.secondName}`}
             </Text>
           </Flex>
         </Skeleton>
@@ -45,17 +45,18 @@ const Home = () => {
           >
             {!loading && (
               <DataTable
-                data={data.processProducts.map((order) => ({
-                  name: order.user.name,
-                  customerId: order.user.id,
-                  id: order.id,
-                  filmType: order.filmType.name,
-                  filmColour: order.filmColour.name,
-                  dev: order.noDevelop ? 'No' : 'Yes',
-                  scan: order.noScans ? 'No' : 'Yes',
-                  scanResolution: order.scanResolution?.name,
-                  status: cleanAndCapitalise(order.status),
-                  notes: order.notes,
+                data={data.processProducts.map((job) => ({
+                  firstName: job.order.user.firstName,
+                  secondName: job.order.user.secondName,
+                  customerId: job.order.user.customerNumber,
+                  id: job.id,
+                  filmType: job.filmType.name,
+                  filmColour: job.filmColour.name,
+                  dev: job.noDevelop ? 'No' : 'Yes',
+                  scan: job.noScans ? 'No' : 'Yes',
+                  scanResolution: job.scanResolution?.name,
+                  status: cleanAndCapitalise(job.status),
+                  notes: job.notes,
                 }))}
               />
             )}
